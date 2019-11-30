@@ -155,15 +155,8 @@ EMAIL_FROM = '天天生鲜<15698208195@163.com>'
 
 
 # 配置celery
-
-import celery
-
-celery.Celery
-
-# celery中间人 redis://redis服务器所在的ip地址:地址/数据库号
-BROKER_URL = 'redis://127.0.0.1:6379/0'
 # celery结果返回，可用于跟踪结果
-CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/1'
 # celery内容等消息的格式设置
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'

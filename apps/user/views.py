@@ -1,10 +1,11 @@
-from django.shortcuts import render,HttpResponse,redirect,reverse
+from django.shortcuts import render, HttpResponse, redirect, reverse
 from django.views.generic import View
 from user.models import User
 import re
 from itsdangerous import TimedJSONWebSignatureSerializer
 from DailyFresh import settings
 from celery_tasks.tasks import send_active_email
+from django.contrib.auth import authenticate, login
 
 
 # 使用类视图
@@ -30,13 +31,42 @@ class Register(View):
         serializer = TimedJSONWebSignatureSerializer(settings.SECRET_KEY, 3600)
         token = serializer.dumps({'verify': user_obj.id})
         token = token.decode('utf-8')
-        # 使用celery任务函数
-        send_active_email.delay(user_obj, token)
-        return render(request, 'user/login.html')
+        user_email = user_obj.email
+        # 使用celery任务函数,celery默认接收json格式的数据
+        send_active_email.delay(user_email, token)
+        return redirect(reverse('user:login'))
 
 
-def login(request):
-    return render(request, 'user/login.html')
+class Login(View):
+    def get(self, request):
+        if 'username' in request.COOKIES:
+            username = request.COOKIES.get('username')
+            checked = 'checked'
+        else:
+            checked = ''
+            username = ''
+        return render(request, 'user/login.html', {'username': username, 'checked': checked})
+
+    def post(self,request):
+        username = request.POST.get('username')
+        password = request.POST.get('pwd')
+        if not all([username, password]):
+            return render(request, 'user/login.html', {'error_msg': '用户名或密码不能为空'})
+        user_obj = authenticate(username=username, password=password)
+        if not user_obj:
+            return render(request, 'user/login.html', {'error_msg': '用户名或密码错误'})
+        if not user_obj.is_active:
+            return render(request, 'user/login.html', {'error_msg': '用户名未激活'})
+        login(request, user=user_obj)
+        remember = request.POST.get('remember')
+        response = redirect(reverse('user:index'))
+        if remember == 'on':
+            print(remember)
+            response.set_cookie('username', username, max_age=7*24*3600)
+        else:
+            print(remember, '失败')
+            response.delete_cookie('username')
+        return response
 
 
 class Active(View):
@@ -51,3 +81,7 @@ class Active(View):
             return redirect(reverse('user:login'))
         except SignatureExpired as e:
             return HttpResponse("激活链接已过期")
+
+
+def index(request):
+    return render(request, 'index.html')
