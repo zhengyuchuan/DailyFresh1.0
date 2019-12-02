@@ -15,13 +15,18 @@ Including another URLconf
 """
 from django.conf.urls import url
 from apps.user import views
+from django.contrib.auth.decorators import login_required
 
 
 urlpatterns = [
     url(r'^register/$', views.Register.as_view(), name='register'),
     url(r'^login/$', views.Login.as_view(), name='login'),
     url(r'^active/(?P<token>.*)$', views.Active.as_view(), name='active'),
-    url(r'^index$',views.index, name='index')
+    url(r'^index$', views.index, name='index'),
+    url(r'^logout$', views.logout_view, name='logout'),
+    url(r'^user_center$', views.user_center, name='user_center'),
+    url(r'^user_address$', login_required(views.Useraddress.as_view()), name='user_address'),
+    url(r'^order$', views.user_order, name='user_order')
 ]
 
 
