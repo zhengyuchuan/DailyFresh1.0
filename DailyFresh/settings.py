@@ -164,3 +164,9 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 # celery时区设置，使用TIME_ZONE
 CELERY_TIMEZONE = TIME_ZONE
+
+# 配置login_url
+LOGIN_URL = '/user/login/'
+
+# 修改默认上传文件类
+DEFAULT_FILE_STORAGE = 'fdfsservice.fdfs_service.FastDFSStorage'

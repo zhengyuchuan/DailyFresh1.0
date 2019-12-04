@@ -1,19 +1,84 @@
 <!DOCTYPE html>
-{% load staticfiles %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'common_css/reset.css' %}">
-    <link rel="stylesheet" href="{% static 'common_css/main.css' %}">
+    <link rel="stylesheet" href="/static/common_css/reset.css">
+    <link rel="stylesheet" href="/static/common_css/main.css">
     {% block css %}{% endblock %}
 </head>
 <body>
-    {% block header %}{% endblock %}
-    {% block main %}{% endblock %}
-    {% include 'footer.html' %}
-    <script src="{% static 'common_js/jquery1.11.0.js' %}"></script>
-    <script src="{% static 'common_js/jquery-ui.min.js' %}"></script>
-    {% block js %}{% endblock %}
+<div class="header_con">
+    <div class="header">
+        <div class="welcome fl">欢迎来到天天生鲜!</div>
+        <div class="fr">
+            {#        如果你是使用的auth.login()登录的话，你可以在任何一个模板里直接使用user对象#}
+            {% if user.is_authenticated %}
+                <div class="user_link fl">
+                    {#                <a href="{% url 'user:userinfo' %}">欢迎您：{{user.username}}</a>#}
+                    <a href="">欢迎您：{{ user.username }}</a>
+                    <span>|</span>
+                    <a href="{% url 'user:logout' %}">退出</a>
+                    <span>|</span>
+                    <a href="{% url 'user:user_center' %}">用户中心</a>
+                    <span>|</span>
+                    <a href="{% url 'cart:cart' %}">我的购物车</a>
+                    <span>|</span>
+                    <a href="{% url 'user:user_order' %}">我的订单</a>
+                </div>
+            {% else %}
+                <div class="login_btn fl">
+                    <a href="{% url 'user:login' %}">登录</a>
+                    <span>|</span>
+                    <a href="{% url 'user:register' %}">注册</a>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+{% block search %}
+    <div class="search_bar clearfix">
+        <a href="{% url 'user:index' %}" class="logo fl"><img src="/static/images/logo.png"></a>
+        <div class="sub_page_name fl">{{ title }}</div>
+        <form method='get' action="/search/" target="_blank">
+            <div class="search_con fl">
+                <input type="text" class="input_text fl" name="q" placeholder="搜索商品">
+                <input type="submit" class="input_btn fr" name="" value="搜索">
+            </div>
+        </form>
+        {% if user.is_authenticated %}
+            {% if request.session.user_name|default:'' != '' %}
+                <div class="guest_cart fr">
+                    <a href="{% url 'cart:cart' %}" class="cart_name fl">我的购物车</a>
+                    <div class="goods_count fl" id="show_count">{{ count }}</div>
+                </div>
+            {% else %}
+                <div class="guest_cart fr">
+                    <a href="{% url 'user:login' %}" class="cart_name fl">我的购物车</a>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block header %}{% endblock %}
+{% block main %}{% endblock %}
+<script src="/static/common_js/jquery1.11.0.js"></script>
+<script src="/static/common_js/jquery-ui.min.js"></script>
+{% block js %}{% endblock %}
+<div class="footer">
+    <div class="foot_link">
+        <a href="" onclick="none()">关于我们</a>
+        <span>|</span>
+        <a href="" onclick="none()">联系我们</a>
+        <span>|</span>
+        <a href="" onclick="none()">招聘人才</a>
+        <span>|</span>
+        <a href="" onclick="none()">友情链接</a>
+    </div>
+    <p>CopyRight © 2019 安国市天天生鲜信息技术有限公司 All Rights Reserved</p>
+    <p>电话：010-****999 京ICP备*******8号</p>
+</div>
 </body>
 </html>

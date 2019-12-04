@@ -5,9 +5,9 @@ from tinymce.models import HTMLField
 
 class ProductCategory(BaseModel):
     '''商品类型类'''
-    category_name = models.CharField(max_length=20, verbose_name='分类名称')
-    logo = models.CharField(max_length=10, verbose_name='标识')
-    image = models.ImageField(upload_to='category', verbose_name='商品类型图片')
+    category_name = models.CharField(max_length=20, verbose_name='分类名称', null=True, blank=True)
+    logo = models.CharField(max_length=10, verbose_name='标识', null=True, blank=True)
+    image = models.ImageField(upload_to='category', verbose_name='商品类型图片', null=True, blank=True)
 
     class Meta:
         db_table = 'product_category'

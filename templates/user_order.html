@@ -37,18 +37,18 @@
     <div class="pagenation">
         <div class="pagenation">
         {% if page.has_previous %}
-        <a href="{% url 'user:userorder' page.previous_page_number %}">上一页</a>
+        <a href="{% url 'user:user_order' page.previous_page_number %}">上一页</a>
         {% endif %}
         {%for pindex in show_nums%}
         <!--如果选择的是当前页，则标记为活动样式-->
         {%if pindex == page.number%}
         <a href="#" class="active">{{pindex}}</a>
         {%else%}
-        <a href="{% url 'user:userorder' pindex %}">{{pindex}}</a>
+        <a href="{% url 'user:user_order' pindex %}">{{pindex}}</a>
         {%endif%}
         {%endfor%}
         {% if page.has_next %}
-        <a href="{% url 'user:userorder' page.next_page_number %}">下一页></a>
+        <a href="{% url 'user:user_order' page.next_page_number %}">下一页></a>
         {% endif %}
     </div>
     </div>

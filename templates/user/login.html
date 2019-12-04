@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
-{% load staticfiles %}
 {% block title %}
     登录
 {% endblock %}
+{% block search %}
+{% endblock %}
 {% block main %}
     <div class="login_top clearfix">
-		<a href="#" class="login_logo"><img src="{% static 'images/logo/logo02.png' %}"></a>
+		<a href="#" class="login_logo"><img src="/static/images/logo/logo02.png"></a>
 	</div>
 
 	<div class="login_form_bg">
@@ -18,7 +19,7 @@
 					<a href="{% url 'user:register' %}">立即注册</a>
 				</div>
 				<div class="form_input">
-{#                    不加action还是提交到本地址#}
+{# 不加action还是提交到本地址 #}
 					<form id="form" method="post">
                         {% csrf_token %}
 						<input type="text" name="username" class="name_input" value="{{ username }}" placeholder="请输入用户名">
@@ -31,9 +32,9 @@
 							<a href="">忘记密码</a>
 						</div>
 						<input id="lo" type="submit" name="" value="登录" class="input_submit">
-                        <span style="color: red">{{ error_msg }}</span>
 					</form>
 				</div>
+                <span style="color: red;margin-bottom: 10px">{{ error_msg }}</span>
 			</div>
 		</div>
 	</div>

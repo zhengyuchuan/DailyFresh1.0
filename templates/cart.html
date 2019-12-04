@@ -1,14 +1,5 @@
 {% extends 'base.html' %}
 {% block header %}
-    <div class="search_bar clearfix">
-    <a href="/" class="logo fl"><img src="/static/images/logo.png"></a>
-    <form method='get' action="/search/" target="_blank">
-    <div class="search_con fl">
-        <input type="text" class="input_text fl" name="q" placeholder="搜索商品">
-        <input type="submit" class="input_btn fr" name="" value="搜索">
-    </div>
-    </form>
-</div>
 {% endblock %}
 {% block title %}
     购物车
@@ -23,7 +14,8 @@
 		<li class="col05">小计</li>
 		<li class="col06">操作</li>
 	</ul>
-<form action="{% url 'order:payorder' %}" method="post">
+{#<form action="{% url 'order:payorder' %}" method="post">#}
+<form action="" method="post">
     {%for cart in carts%}
 	<ul class="cart_list_td clearfix" id="{{cart.id}}">
         {% csrf_token %}
