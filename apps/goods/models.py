@@ -4,7 +4,7 @@ from tinymce.models import HTMLField
 
 
 class ProductCategory(BaseModel):
-    '''商品类型类'''
+    """商品分类表"""
     category_name = models.CharField(max_length=20, verbose_name='分类名称', null=True, blank=True)
     logo = models.CharField(max_length=10, verbose_name='标识', null=True, blank=True)
     image = models.ImageField(upload_to='category', verbose_name='商品类型图片', null=True, blank=True)
@@ -19,7 +19,7 @@ class ProductCategory(BaseModel):
 
 
 class Products(BaseModel):
-    '''商品SPU模型类'''
+    """商品SPU表"""
     name = models.CharField(max_length=20, verbose_name='商品SPU名称')
     detail = HTMLField(blank=True, verbose_name='商品详情')
 
@@ -33,6 +33,7 @@ class Products(BaseModel):
 
 
 class ProductSKU(BaseModel):
+    """商品SKU表（最小存货单位）"""
     PRODUCT_STATUS = (
         (0, '下线'),
         (1, '上线')
@@ -44,13 +45,13 @@ class ProductSKU(BaseModel):
     image = models.ImageField(upload_to='products', verbose_name='商品图片')
     inventory = models.IntegerField(default=1, verbose_name='库存')
     sales = models.IntegerField(default=0, verbose_name='销量')
-    status = models.SmallIntegerField(default=1,choices=PRODUCT_STATUS, verbose_name='商品状态')
+    status = models.SmallIntegerField(default=1, choices=PRODUCT_STATUS, verbose_name='商品状态')
     type = models.ForeignKey(ProductCategory, verbose_name='所属分类')
     products = models.ForeignKey(Products, verbose_name='商品SPU')
 
     class Meta:
         db_table = 'product_sku'
-        verbose_name = '商品'
+        verbose_name = '商品SKU'
         verbose_name_plural = verbose_name
 
     def __str__(self):
@@ -58,6 +59,7 @@ class ProductSKU(BaseModel):
 
 
 class ProductImage(BaseModel):
+    """商品SKU图片表"""
     image = models.ImageField(upload_to='products', verbose_name='商品图片路径')
     product = models.ForeignKey(ProductSKU, verbose_name='商品')
 
@@ -68,23 +70,25 @@ class ProductImage(BaseModel):
 
 
 class ProductBanner(BaseModel):
+    """轮播图片"""
     image = models.ImageField(upload_to='banner', verbose_name='轮播图片')
     index = models.SmallIntegerField(default=0, verbose_name='轮播索引')
-    product = models.ForeignKey(ProductSKU, verbose_name='商品')
+    product = models.ForeignKey(ProductSKU, verbose_name='商品', null=True, blank=True)
 
     class Meta:
         db_table = 'product_banner'
         verbose_name = '首页轮播商品'
         verbose_name_plural = verbose_name
 
-    def __str__(self):
-        return self.product.name
+    # def __str__(self):
+    #     return self.product.name
 
 
 class PromotionPc(BaseModel):
+    """促销活动"""
     name = models.CharField(max_length=20, verbose_name='活动名称')
     image = models.ImageField(upload_to='banner', verbose_name='活动图片')
-    url = models.URLField(verbose_name='互动连接')
+    url = models.CharField(max_length=256, verbose_name='互动连接', null=True, blank=True)
     index = models.SmallIntegerField(default=0, verbose_name='展示顺序')
 
     class Meta:
@@ -97,6 +101,7 @@ class PromotionPc(BaseModel):
 
 
 class TypeShow(BaseModel):
+    """首页分类展示表"""
     DISPLAY_TYPE_CHOICES = (
         (0, '文字'),
         (1, '图片')

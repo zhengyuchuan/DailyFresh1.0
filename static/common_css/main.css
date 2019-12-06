@@ -187,7 +187,7 @@ html,body{height:100%}
 .new_goods li img{display:block;width:150px;height:150px;margin:10px auto;}
 .new_goods li h4{width:160px;margin:0 auto;}
 .new_goods li h4 a{font-weight:normal;color:#666;display:block;width:160px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
-.new_goods li .prize{font-size:14px;color:#da260e;margin:10px auto;}
+.new_goods li .price{font-size:14px;color:#da260e;margin:10px auto;}
 
 
 
@@ -219,10 +219,10 @@ html,body{height:100%}
 
 /* 分页样式 */
 
-.pagenation{height:32px;text-align:center;font-size:0;margin:30px auto;}
-.pagenation a{display:inline-block;border:1px solid #d2d2d2;background-color:#f8f6f7;font-size:12px;padding:7px 10px;color:#666;margin:5px}
+.pagination_css {height:32px;text-align:center;font-size:0;margin:30px auto;}
+.pagination_css a{display:inline-block;border:1px solid #d2d2d2;background-color:#f8f6f7;font-size:12px;padding:7px 10px;color:#666;margin:5px}
 
-.pagenation .active{background-color:#fff;color:#43a200}
+.pagination_css .active{background-color:#fff;color:#43a200}
 
 
 /* 商品详情样式 */

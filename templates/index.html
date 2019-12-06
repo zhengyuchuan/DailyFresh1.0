@@ -2,20 +2,7 @@
 {% block title %}
     主页
 {% endblock %}
-<div class="search_bar clearfix">
-    <a href="" class="logo fl"><img src="/static/images/logo.png"></a>
-    <form method='get' action="" target="_blank">
-    <div class="search_con fl">
-        <input type="text" class="input_text fl" name="q" placeholder="搜索商品">
-        <input type="submit" class="input_btn fr" name="" value="搜索">
-    </div>
-    </form>
-        <div class="guest_cart fr">
-            <a href="" class="cart_name fl">我的购物车</a>
-            <div class="goods_count fl" id="show_count">0</div>
-        </div>
-</div>
-{#{% endblock %}#}
+
 {% block main %}
 	<div class="navbar_con">
 		<div class="navbar">
@@ -29,30 +16,33 @@
 			</ul>
 		</div>
 	</div>
-
 	<div class="center_con clearfix">
+{#        首页全部商品分类#}
 		<ul class="subnav fl">
             {% for type in types %}
 			<li><a href="#model0{{ forloop.counter }}" class="{{ type.logo }}">{{ type.category_name }}</a></li>
             {% endfor %}
 		</ul>
+{#    轮播图#}
 		<div class="slide fl">
 			<ul class="slide_pics">
                 {% for c_img in banners %}
-				<li><img src="{{ c_img.image }}" alt="幻灯片"></li>
+				<li><img src="{{ c_img.image.url }}" alt="幻灯片"></li>
                 {% endfor %}
 			</ul>
 			<div class="prev"></div>
 			<div class="next"></div>
 			<ul class="points"></ul>
 		</div>
+{#    促销活动#}
 		<div class="adv fl">
             {% for p in promotion %}
-			<a href="#"><img src="{{ p.image }}"></a>
-{#			<a href="#"><img src="/static/images/adv02.jpg"></a>#}
+			<a href="#"><img src="{{ p.image.url }}"></a>
             {% endfor %}
 		</div>
 	</div>
+
+
     {% for c in types %}
 	<div class="list_model">
 		<div class="list_title clearfix">
@@ -60,20 +50,21 @@
 			<div class="subtitle fl">
 				<span>|</span>
 				{%for p in c.word_show%}
-				<a href="/{{p.product.id}}">{{p.product.name|slice:'10'}}...</a>
+				<a href="/{{p.product.id}}">{{p.product.name|slice:'10'}}</a>
 				{%endfor%}
 			</div>
-			<a href="/list2_1_1" class="goods_more fr" id="fruit_more">查看更多 ></a>
+			<a href="/list/{{ c.id }}/1" class="goods_more fr" id="fruit_more">查看更多 ></a>
 		</div>
 
 		<div class="goods_con clearfix">
-			<div class="goods_banner fl"><img src="{{ c.image }}"></div>
+        {# 商品分类的图片 #}
+			<div class="goods_banner fl"><img src="{{ c.image.url }}"></div>
+        {# 分类商品内的SPU商品 #}
 			<ul class="goods_list fl">
 				{%for pic_p in c.pic_show%}
 				<li>
-					<!--images/goods/goods003.jpg-->
-					<h4><a href="/{{pic_p.id}}">{{pic_p.product.name|slice:'10'}}...</a></h4>
-					<a href="/{{g.id}}"><img src="{{pic_p.product.image}}"></a>
+					<h4><a href="{% url 'goods:detail' pic_p.id %}">{{pic_p.product.name|slice:'10'}}</a></h4>
+					<a href="{% url 'goods:detail' pic_p.id %}"><img src="{{pic_p.product.image.url}}"></a>
 					<div class="prize">¥{{pic_p.product.price}}</div>
 				</li>
 				{%endfor%}

@@ -1,10 +1,10 @@
-{% extends 'products/p_base.html' %}
+{% extends 'base.html' %}
 {% block title %}
     详情页
 {% endblock %}
 {% block detail %}
 	<div class="goods_detail_con clearfix">
-		<div class="goods_detail_pic fl"><img src="{{ product.image }}"></div>
+		<div class="goods_detail_pic fl"><img src="{{ product.image.url }}"></div>
 
 		<div class="goods_detail_list fr" data-id="{{ product.id }}">
 			<h3>{{product.name}}</h3>
@@ -31,7 +31,7 @@
                     <div>规格:</div>
                         <ul>
                             {% for standard in same_spu_products %}
-                                <li><a href="{% url 'product:detail' standard.id%}">{{ standard.unite }}</a></li>
+                                <li><a href="{% url 'goods:detail' standard.id%}">{{ standard.unite }}</a></li>
                             {% endfor %}
                         </ul>
 
@@ -56,6 +56,7 @@
 {% endblock detail%}
 
 {% block list %}
+    <div class="main_wrap clearfix">
 		<div class="r_wrap fr clearfix">
 			<ul class="detail_tab clearfix">
 				<li class="active">商品介绍</li>
@@ -68,8 +69,8 @@
 					<dd>{{product.products.detail|safe}}</dd>
 				</dl>
 			</div>
-
 		</div>
+    </div>
 {% endblock list %}
 {% block js %}
     <script>

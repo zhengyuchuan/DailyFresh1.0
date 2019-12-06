@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block title %}
+    {{ type.name }}
+{% endblock %}
+{% block list %}
+    <div class="main_wrap clearfix">
+        <div class="l_wrap fl clearfix">
+            <div class="new_goods">
+                <h3>新品推荐</h3>
+                <ul>
+                    {% for n_p in new_product %}
+                    <li>
+                        <a href="{% url 'goods:detail' n_p.id %}"><img src="{{ n_p.image.url }}"></a>
+                        <h4><a href="{% url 'goods:detail' n_p.id %}">{{ n_p.name }}</a></h4>
+                        <div class="price">{{ n_p.price }}</div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="r_wrap fr clearfix">
+            <div class="sort_bar">
+                {#            <a href="{% url 'goods:list' current_type.id page.number %}?sort=default"#}
+                <a href="{% url 'goods:list' category_obj.id 1 %}?sort=default"
+                        {% if sort == "default" %}
+                   class="active"
+                        {% endif %}
+                >默认</a>
+                {#            <a href="{% url 'goods:list' current_type.id page.number %}?sort=price"#}
+                <a href="{% url 'goods:list' category_obj.id 1 %}?sort=price"
+                        {% if sort == "price" %}
+                   class="active"
+                        {% endif %}
+                >价格</a>
+                {#            <a href="{% url 'goods:list' current_type.id page.number %}?sort=sales"#}
+                <a href="{% url 'goods:list' category_obj.id 1 %}?sort=sales"
+                        {% if sort == "sales" %}
+                   class="active"
+                        {% endif %}
+                >人气</a>
+            </div>
+            <ul class="goods_type_list clearfix">
+                {% for p in page.object_list %}
+                    <li>
+                        {#                    <a href="{% url 'goods:detail' p.id %}"><img alt="" src="{{ p.image.url }}"></a>#}
+                        <a href="{% url 'goods:detail' p.id %}"><img alt="" src="{{ p.image.url }}"></a>
+                        {#                    <h4><a href="{% url 'goods:detail' p.id %}">{{ p.name }}</a></h4>#}
+                        <h4><a href="">{{ p.name }}</a></h4>
+                        <div class="operate">
+                            <span class="prize">￥{{ p.price }}</span>
+                            <span class="unit">{{ p.unite }}</span>
+                            <span class="unit">销量{{ p.sales }}</span>
+                            {% if user.is_authenticated %}
+                                {#                            <a href="javascript:;" id="{{ g.id }}" class="add_goods" title="加入购物车"></a>#}
+                                <a href="javascript:;" id="" class="add_goods" title="加入购物车"></a>
+                            {% else %}
+                                <a href="{% url 'user:login' %}" class="add_goods" title="加入购物车"></a>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="pagination_css">
+        {% if page.object_list.has_previous %}
+            <a href="{% url 'goods:list' category_obj.id page.object_list.previous_page_number %}?sort={{ sort }}">&lt;上一页</a>
+        {% endif %}
+        {% for p_index in show_nums %}
+            <!--如果选择的是当前页，则标记为活动样式-->
+            {% if p_index == page.number %}
+                <a href="#" class="active">{{ p_index }}</a>
+            {% else %}
+                <a href="{% url 'goods:list' category_obj.id p_index %}?sort={{ sort }}">{{ p_index }}</a>
+            {% endif %}
+        {% endfor %}
+        {% if page.object_list.has_next %}
+            <a href="{% url 'goods:list' category_obj.id page.object_list.next_page_number %}?sort={{ sort }}">下一页&gt;</a>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block js %}
+
+
+{% endblock %}
+

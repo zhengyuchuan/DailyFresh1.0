@@ -47,23 +47,16 @@
                 <input type="submit" class="input_btn fr" name="" value="搜索">
             </div>
         </form>
-        {% if user.is_authenticated %}
-            {% if request.session.user_name|default:'' != '' %}
-                <div class="guest_cart fr">
-                    <a href="{% url 'cart:cart' %}" class="cart_name fl">我的购物车</a>
-                    <div class="goods_count fl" id="show_count">{{ count }}</div>
-                </div>
-            {% else %}
-                <div class="guest_cart fr">
-                    <a href="{% url 'user:login' %}" class="cart_name fl">我的购物车</a>
-                </div>
-            {% endif %}
-        {% endif %}
+        <div class="guest_cart fr">
+            <a href="{% url 'cart:cart' %}" class="cart_name fl">我的购物车</a>
+            <div class="goods_count fl" id="show_count">{{ count }}</div>
+        </div>
     </div>
 {% endblock %}
-
 {% block header %}{% endblock %}
+{% block detail %}{% endblock %}
 {% block main %}{% endblock %}
+{% block list %}{% endblock %}
 <script src="/static/common_js/jquery1.11.0.js"></script>
 <script src="/static/common_js/jquery-ui.min.js"></script>
 {% block js %}{% endblock %}
@@ -81,4 +74,9 @@
     <p>电话：010-****999 京ICP备*******8号</p>
 </div>
 </body>
+<script>
+    function none() {
+        alert("本大爷暂时未开发！")
+    }
+</script>
 </html>
