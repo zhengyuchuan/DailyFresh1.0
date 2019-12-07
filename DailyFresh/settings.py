@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'tinymce',  # 富文本编辑器注册
+    'haystack',  # 全文检索框架
     'cart',
     'goods',
     'order',
@@ -182,3 +183,16 @@ LOGIN_URL = '/user/login/'
 
 # 修改默认上传文件类
 DEFAULT_FILE_STORAGE = 'fdfsservice.fdfs_service.FastDFSStorage'
+
+
+# 全文搜索框架配置
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        # 使用whoosh引擎
+        # 'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        # 使用jieba分词
+        'ENGINE': 'haystack.backends.whoosh_cn_backend.WhooshEngine',
+        # 索引文件路径
+        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
+    },
+}

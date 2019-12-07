@@ -65,7 +65,7 @@
 				<li>
 					<h4><a href="{% url 'goods:detail' pic_p.id %}">{{pic_p.product.name|slice:'10'}}</a></h4>
 					<a href="{% url 'goods:detail' pic_p.id %}"><img src="{{pic_p.product.image.url}}"></a>
-					<div class="prize">¥{{pic_p.product.price}}</div>
+					<div class="price">¥{{pic_p.product.price}}</div>
 				</li>
 				{%endfor%}
 			</ul>

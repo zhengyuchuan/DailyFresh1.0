@@ -1,1 +1,1 @@
-print(1 or None)
+print(len(range(1,10)))

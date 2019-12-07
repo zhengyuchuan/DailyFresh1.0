@@ -2,6 +2,31 @@
 {% block title %}
     {{ type.name }}
 {% endblock %}
+
+{% block main %}
+    <div class="navbar_con">
+        <div class="navbar clearfix">
+            <div class="subnav_con fl">
+                <h1>全部商品分类</h1>
+                <span></span>
+                <ul class="subnav">
+                    {% for type in types %}
+                        <li><a href="{% url 'goods:list' type.id 1 %}"
+                               class="{{ type.logo }}">{{ type.category_name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <ul class="navlist fl">
+                <li><a href="">首页</a></li>
+                <li class="interval">|</li>
+                <li><a href="">手机生鲜</a></li>
+                <li class="interval">|</li>
+                <li><a href="">抽奖</a></li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}
+
 {% block list %}
     <div class="main_wrap clearfix">
         <div class="l_wrap fl clearfix">
@@ -9,11 +34,11 @@
                 <h3>新品推荐</h3>
                 <ul>
                     {% for n_p in new_product %}
-                    <li>
-                        <a href="{% url 'goods:detail' n_p.id %}"><img src="{{ n_p.image.url }}"></a>
-                        <h4><a href="{% url 'goods:detail' n_p.id %}">{{ n_p.name }}</a></h4>
-                        <div class="price">{{ n_p.price }}</div>
-                    </li>
+                        <li>
+                            <a href="{% url 'goods:detail' n_p.id %}"><img src="{{ n_p.image.url }}"></a>
+                            <h4><a href="{% url 'goods:detail' n_p.id %}">{{ n_p.name }}</a></h4>
+                            <div class="price">{{ n_p.price }}</div>
+                        </li>
                     {% endfor %}
                 </ul>
             </div>
@@ -47,7 +72,7 @@
                         {#                    <h4><a href="{% url 'goods:detail' p.id %}">{{ p.name }}</a></h4>#}
                         <h4><a href="">{{ p.name }}</a></h4>
                         <div class="operate">
-                            <span class="prize">￥{{ p.price }}</span>
+                            <span class="price">￥{{ p.price }}</span>
                             <span class="unit">{{ p.unite }}</span>
                             <span class="unit">销量{{ p.sales }}</span>
                             {% if user.is_authenticated %}
@@ -80,8 +105,7 @@
     </div>
 {% endblock %}
 
+
 {% block js %}
-
-
 {% endblock %}
 

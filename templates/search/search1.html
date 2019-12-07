@@ -31,7 +31,7 @@
             <span></span>
             <ul class="subnav">
                 {% for type in types %}
-                <li><a href="{% url 'product:list' type.id 1 %}" class="{{ type.logo }}">{{ type.category_name }}</a></li>
+                <li><a href="{% url 'goods:list' type.id 1 %}" class="{{ type.logo }}">{{ type.category_name }}</a></li>
                 {% endfor %}
             </ul>
         </div>
@@ -48,17 +48,17 @@
 {% block list %}
 <div class="r_wrap fr clearfix">
     <div class="sort_bar">
-        <a href="{% url 'product:list' current_type.id page.number %}?sort=default"
+        <a href="{% url 'goods:list' current_type.id page.number %}?sort=default"
            {%if sort == "default"%}
         class="active"
         {%endif%}
         >默认</a>
-        <a href="{% url 'product:list' current_type.id page.number %}?sort=price"
+        <a href="{% url 'goods:list' current_type.id page.number %}?sort=price"
            {%if sort == "price"%}
         class="active"
         {%endif%}
         >价格</a>
-        <a href="{% url 'product:list' current_type.id page.number %}?sort=sales"
+        <a href="{% url 'goods:list' current_type.id page.number %}?sort=sales"
            {%if sort == "sales"%}
         class="active"
         {%endif%}
@@ -68,8 +68,8 @@
         {%for p in page %}
         <li>
             {{ page }}{{ paginator }}
-            <a href="{% url 'product:detail' p.object.id %}"><img src="{{ p.object.image }}"></a>
-            <h4><a href="{% url 'product:detail' p.object.id %}">{{p.object.name}}</a></h4>
+            <a href="{% url 'goods:detail' p.object.id %}"><img src="{{ p.object.image }}"></a>
+            <h4><a href="{% url 'goods:detail' p.object.id %}">{{p.object.name}}</a></h4>
             <div class="operate">
                 <span class="prize">￥{{p.object.price}}</span>
                 <span class="unit">{{p.object.unite}}</span>

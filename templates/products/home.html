@@ -97,10 +97,10 @@
 			<div class="subtitle fl">
 				<span>|</span>
 				{%for p in c.word_show%}
-				<a href="{% url 'product:detail' p.product.id%}">{{p.product.name|slice:'10'}}...</a>
+				<a href="{% url 'goods:detail' p.product.id%}">{{p.product.name|slice:'10'}}...</a>
 				{%endfor%}
 			</div>
-			<a href="{% url 'product:list' c.id 1 %}" class="goods_more fr" id="fruit_more">查看更多 ></a>
+			<a href="{% url 'goods:list' c.id 1 %}" class="goods_more fr" id="fruit_more">查看更多 ></a>
 		</div>
 
 		<div class="goods_con clearfix">
@@ -109,8 +109,8 @@
 				{%for pic_p in c.pic_show%}
 				<li>
 					<!--images/goods/goods003.jpg-->
-					<h4><a href="{% url 'product:detail' pic_p.product.id%}">{{pic_p.product.name|slice:'10'}}...</a></h4>
-					<a href="{% url 'product:detail' pic_p.product.id%}"><img src="{{pic_p.product.image}}"></a>
+					<h4><a href="{% url 'goods:detail' pic_p.product.id%}">{{pic_p.product.name|slice:'10'}}...</a></h4>
+					<a href="{% url 'goods:detail' pic_p.product.id%}"><img src="{{pic_p.product.image}}"></a>
 					<div class="prize">¥{{pic_p.product.price}}</div>
 				</li>
 				{%endfor%}

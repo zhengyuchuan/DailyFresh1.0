@@ -6,11 +6,8 @@
         <div class="left_menu_con clearfix">
             <h3>用户中心</h3>
             <ul>
-                {#    <li><a href="{% url 'user:userinfo' %}"{% if info %} class="active"{% endif %}>· 个人信息</a></li>#}
                 <li><a href="{% url 'user:user_center' %}"{% if info %} class="active"{% endif %}>个人信息</a></li>
-                {#    <li><a href="{% url 'user:userorder' 1 %}"{% if order %} class="active"{% endif %}>· 全部订单</a></li>#}
                 <li><a href="{% url 'user:user_order' %}"{% if order %} class="active"{% endif %}>全部订单</a></li>
-                {#    <li><a href="{% url 'user:useraddress' %}"{% if site %} class="active"{% endif %}>· 收货地址</a></li>#}
                 <li><a href="{% url 'user:user_address' %}"{% if site %} class="active"{% endif %}>收货地址</a></li>
             </ul>
         </div>

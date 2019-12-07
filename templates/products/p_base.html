@@ -30,7 +30,7 @@
             <span></span>
             <ul class="subnav">
                 {% for type in types %}
-                <li><a href="{% url 'product:list' type.id 1 %}" class="{{ type.logo }}">{{ type.category_name }}</a></li>
+                <li><a href="{% url 'goods:list' type.id 1 %}" class="{{ type.logo }}">{{ type.category_name }}</a></li>
                 {% endfor %}
             </ul>
         </div>
@@ -48,11 +48,11 @@
     <a href="/">全部分类</a>
     <span>></span>
     {% if product %}
-    <a href="{% url 'product:list' product.type.id 1 %}">{{product.type.category_name}}</a>
+    <a href="{% url 'goods:list' product.type.id 1 %}">{{product.type.category_name}}</a>
     <span>></span>
     <a href="">商品详情</a>
         {% else %}
-        <a href="{% url 'product:list' current_type.id 1 %}">{{current_type.category_name}}</a>
+        <a href="{% url 'goods:list' current_type.id 1 %}">{{current_type.category_name}}</a>
     {% endif %}
 </div>
 
@@ -67,8 +67,8 @@
             <ul>
                 {%for np in new_products%}
                 <li>
-                    <a href="{% url 'product:detail' np.id %}"><img src="{{ np.image }}"></a>
-                    <h4><a href="{% url 'product:detail' np.id %}">{{np.name}}</a></h4>
+                    <a href="{% url 'goods:detail' np.id %}"><img src="{{ np.image }}"></a>
+                    <h4><a href="{% url 'goods:detail' np.id %}">{{np.name}}</a></h4>
                     <div class="prize">￥{{np.price}}</div>
                 </li>
                 {%endfor%}
