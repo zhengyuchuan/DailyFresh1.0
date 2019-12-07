@@ -1,7 +1,7 @@
 from django.shortcuts import render, HttpResponse, redirect, reverse
 from django.views.generic import View
 from user.models import User, UserAddress
-from goods.models import ProductCategory
+from goods.models import ProductCategory,ProductBanner,PromotionPc, TypeShow, ProductSKU
 import re
 from itsdangerous import TimedJSONWebSignatureSerializer
 from DailyFresh import settings
@@ -88,7 +88,18 @@ class Active(View):
 def index(request):
     page_name = 1
     category_obj = ProductCategory.objects.all()
-    return render(request, 'index.html', {'types': category_obj, 'page_name': page_name})
+    banner_obj = ProductBanner.objects.all()
+    promotion_obj = PromotionPc.objects.all()
+    # 动态增加属性，以便区分商品类型
+    for p in category_obj:
+        word_show = TypeShow.objects.filter(product_type=p, display_type=0)
+        pic_show = TypeShow.objects.filter(product_type=p, display_type=1)
+        p.word_show = word_show
+        p.pic_show = pic_show
+    return render(request, 'index.html', {'types': category_obj,
+                                          'page_name': page_name,
+                                          'banners': banner_obj,
+                                          'promotion': promotion_obj})
 
 
 def logout_view(request):
@@ -101,7 +112,19 @@ def user_center(request):
     info = 1
     user = request.user
     address_obj = UserAddress.objects.get_default_addr(user=user)
-    return render(request, 'user_center_info.html', {'info': info, 'address': address_obj})
+    # 创建StrictRedis对象
+    con = get_redis_connection('default')
+    history_key = 'history_%d' % user.id
+    # 获取最新5条记录
+    sku_id = con.lrange(history_key, 0, 4)
+    product_list = []
+    for i in sku_id:
+        product = ProductSKU.objects.get(id=i)
+        product_list.append(product)
+    print(product_list)
+    return render(request, 'user_center_info.html', {'info': info,
+                                                     'address': address_obj,
+                                                     'product_list': product_list})
 
 
 class Useraddress(View):

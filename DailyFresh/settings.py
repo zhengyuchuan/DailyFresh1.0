@@ -143,6 +143,18 @@ TINYMCE_DEFAULT_CONFIG = {
     'height': 400
 }
 
+# 配置Redis作为缓存
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://192.168.1.4:6379/9',
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    },
+}
+
+
 # 邮件服务器配置
 EMAIL_HOST = 'smtp.163.com'  # 如果是 qq 改成 smtp.qq.com
 EMAIL_PORT = 465
@@ -150,7 +162,7 @@ EMAIL_HOST_USER = '15698208195@163.com'  # 在这里填入您的163邮箱账号
 EMAIL_HOST_PASSWORD = 'chuan123QQ'  # 请在这里填上您自己邮箱的授权码
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_USE_SSL = True
-#收件人看到的发件人，尖括号中的必须与上面的user一致
+# 收件人看到的发件人，尖括号中的必须与上面的user一致
 EMAIL_FROM = '天天生鲜<15698208195@163.com>'
 
 

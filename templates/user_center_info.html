@@ -1,4 +1,4 @@
-{% extends 'user/user_base.html' %}
+{% extends 'user_base.html' %}
 {% block title %}
     用户中心
 {% endblock %}
@@ -21,23 +21,20 @@
         <h3 class="common_title2">最近浏览</h3>
         <div class="has_view_list">
             <ul class="goods_type_list clearfix">
-
                 {% for product  in product_list %}
                     <li>
-                        {#					<a href="{% url 'product:detail' product.id %}"><img src="{{product.image}}"></a>#}
-                        <a href=""><img src="{{ product.image }}"></a>
-                        {#					<h4><a href="{% url 'product:detail' product.id %}">{{product.name}}</a></h4>#}
-                        <h4><a href="">{{ product.name }}</a></h4>
+                        <a href="{% url 'goods:detail' product.id %}"><img src="{{ product.image.url }}"></a>
+                        <h4><a href="{% url 'goods:detail' product.id %}">{{ product.name }}</a></h4>
                         <div class="operate">
-                            <span class="prize">￥{{ product.price }}</span>
+                            <span class="price">￥{{ product.price }}</span>
                             <span class="unit">{{ product.price }}/{{ product.unite }}</span>
                             <a href="#" class="add_goods" title="加入购物车"></a>
                         </div>
                     </li>
+                {% empty %}
+                    无历史浏览记录
                 {% endfor %}
             </ul>
         </div>
     </div>
-
-
 {% endblock right_content %}

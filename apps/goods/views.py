@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, reverse
 from goods.models import ProductCategory, ProductSKU
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.core.paginator import Paginator
+from django_redis import get_redis_connection
 
 
 def goods(request):
@@ -33,7 +34,6 @@ def goods_list(request, product_category_id, page_number):
     paginator.object_list = paginator.page(current_page)
     # 返回分页之后的总页数
     num_page = paginator.page_range
-    # todo：页码控制
     # 如果页数小于等于5页，则显示所有页码
     # 如果页数大于5页，当前页在前三页，显示前5页
     # 如果页数大于5页，当前页在后三页，显示后5页
@@ -57,5 +57,16 @@ def goods_list(request, product_category_id, page_number):
 
 
 def detail(request, detail_id):
+    try:
+        detail_id = int(detail_id)
+    except:
+        detail_id = 1
     product_sku = ProductSKU.objects.get(id=detail_id)
+    user = request.user
+    if user.is_authenticated:
+        con = get_redis_connection('default')
+        history_key = 'history_%d' % user.id
+        con.lrem(history_key, 0, product_sku.id)
+        con.lpush(history_key, product_sku.id)
+        con.ltrim(history_key, 0, 4)
     return render(request, 'detail.html', {'product': product_sku})
