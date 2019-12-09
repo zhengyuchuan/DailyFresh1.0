@@ -3,8 +3,6 @@ from fdfs_client.client import Fdfs_client
 
 
 class FastDFSStorage(Storage):
-    def __init__(self):
-        print("chushihua")
     # 必须返回一个file对象
     def _open(self, name):
         pass
@@ -32,5 +30,6 @@ class FastDFSStorage(Storage):
         file_name = up_load_result.get('Remote file_id')
         return file_name
 
+    # 方便在模板使用.url，直接调用
     def url(self, name):
-        return 
+        return 'http://192.168.1.4/' + name

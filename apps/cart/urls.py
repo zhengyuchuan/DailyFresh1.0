@@ -18,5 +18,8 @@ from apps.cart import views
 
 
 urlpatterns = [
-    url(r'^cart$', views.cart, name='cart')
+    url(r'^cart$', views.CartInfo.as_view(), name='cart'),
+    url(r'^add$', views.CartADDView.as_view(), name='add'),
+    url(r'^update$', views.CartUpdateView.as_view(), name='update'),
+    url(r'^delete$', views.CartDeleteView.as_view(), name='delete')
 ]

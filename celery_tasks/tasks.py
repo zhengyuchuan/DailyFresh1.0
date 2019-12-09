@@ -18,3 +18,8 @@ def send_active_email(user_email, token):
     received_list = [user_email, ]
     send_mail(subject=subject, message='', html_message=html_msg, from_email=settings.EMAIL_HOST_USER,
               recipient_list=received_list)
+
+
+def generate_static_html():
+    # 生成index静态页面
+    pass

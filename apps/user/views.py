@@ -96,10 +96,18 @@ def index(request):
         pic_show = TypeShow.objects.filter(product_type=p, display_type=1)
         p.word_show = word_show
         p.pic_show = pic_show
+    # 获取用户购物车内商品数量
+    user = request.user
+    cart_count = 0
+    if user.is_authenticated:
+        con = get_redis_connection('default')
+        cart_key = 'cart_%d' % user.id
+        cart_count = con.hlen(cart_key)
     return render(request, 'index.html', {'types': category_obj,
                                           'page_name': page_name,
                                           'banners': banner_obj,
-                                          'promotion': promotion_obj})
+                                          'promotion': promotion_obj,
+                                          'count': cart_count})
 
 
 def logout_view(request):
@@ -121,7 +129,6 @@ def user_center(request):
     for i in sku_id:
         product = ProductSKU.objects.get(id=i)
         product_list.append(product)
-    print(product_list)
     return render(request, 'user_center_info.html', {'info': info,
                                                      'address': address_obj,
                                                      'product_list': product_list})

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}
-    {{ type.name }}
+    列表页
 {% endblock %}
 
 {% block main %}
@@ -45,19 +45,16 @@
         </div>
         <div class="r_wrap fr clearfix">
             <div class="sort_bar">
-                {#            <a href="{% url 'goods:list' current_type.id page.number %}?sort=default"#}
                 <a href="{% url 'goods:list' category_obj.id 1 %}?sort=default"
                         {% if sort == "default" %}
                    class="active"
                         {% endif %}
                 >默认</a>
-                {#            <a href="{% url 'goods:list' current_type.id page.number %}?sort=price"#}
                 <a href="{% url 'goods:list' category_obj.id 1 %}?sort=price"
                         {% if sort == "price" %}
                    class="active"
                         {% endif %}
                 >价格</a>
-                {#            <a href="{% url 'goods:list' current_type.id page.number %}?sort=sales"#}
                 <a href="{% url 'goods:list' category_obj.id 1 %}?sort=sales"
                         {% if sort == "sales" %}
                    class="active"
@@ -67,17 +64,14 @@
             <ul class="goods_type_list clearfix">
                 {% for p in page.object_list %}
                     <li>
-                        {#                    <a href="{% url 'goods:detail' p.id %}"><img alt="" src="{{ p.image.url }}"></a>#}
                         <a href="{% url 'goods:detail' p.id %}"><img alt="" src="{{ p.image.url }}"></a>
-                        {#                    <h4><a href="{% url 'goods:detail' p.id %}">{{ p.name }}</a></h4>#}
                         <h4><a href="">{{ p.name }}</a></h4>
                         <div class="operate">
                             <span class="price">￥{{ p.price }}</span>
                             <span class="unit">{{ p.unite }}</span>
                             <span class="unit">销量{{ p.sales }}</span>
                             {% if user.is_authenticated %}
-                                {#                            <a href="javascript:;" id="{{ g.id }}" class="add_goods" title="加入购物车"></a>#}
-                                <a href="javascript:;" id="" class="add_goods" title="加入购物车"></a>
+                                <a href="javascript:;" class="add_goods" sku_id="{{ p.id }}" title="加入购物车"></a>
                             {% else %}
                                 <a href="{% url 'user:login' %}" class="add_goods" title="加入购物车"></a>
                             {% endif %}
@@ -94,7 +88,7 @@
         {% for p_index in show_nums %}
             <!--如果选择的是当前页，则标记为活动样式-->
             {% if p_index == page.number %}
-                <a href="#" class="active">{{ p_index }}</a>
+                <a href="" class="active">{{ p_index }}</a>
             {% else %}
                 <a href="{% url 'goods:list' category_obj.id p_index %}?sort={{ sort }}">{{ p_index }}</a>
             {% endif %}
@@ -105,7 +99,47 @@
     </div>
 {% endblock %}
 
+{% block bottom %}
+    <div class="add_jump"></div>
+{% endblock %}
+
 
 {% block js %}
+    <script>
+        // 获取add_goods div元素左上角的坐标
+		var $add_x = $('.add_goods').offset().top;
+		var $add_y = $('.add_goods').offset().left;
+        // 获取show_count div元素左上角的坐标
+		var $to_x = $('#show_count').offset().top;
+		var $to_y = $('#show_count').offset().left;
+		$('.add_goods').click(function(){
+            // 获取商品id和商品数量
+            var sku_id = $(this).attr('sku_id')// attr prop
+            var count = 1
+            var csrf = $('input[name="csrfmiddlewaretoken"]').val()
+            // 组织参数
+            var params = {'sku_id':sku_id, 'count':count, 'csrfmiddlewaretoken':csrf}
+            // 发起ajax post请求，访问/cart/add, 传递参数:sku_id count
+            $.post('/cart/add', params, function (data) {
+                if (data.res == 4){
+                    // 添加成功
+                    $(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'})
+                    $(".add_jump").stop().animate({
+                        'left': $to_y+7,
+                        'top': $to_x+7},
+                        "fast", function() {
+                            $(".add_jump").fadeOut('normal',function(){
+                                // 重新设置用户购物车中商品的条目数
+                                $('#show_count').html(data.total_count);
+                            });
+			        });
+                }
+                else{
+                    // 添加失败
+                    alert(data.error_msg)
+                }
+            })
+		})
+    </script>
 {% endblock %}
 

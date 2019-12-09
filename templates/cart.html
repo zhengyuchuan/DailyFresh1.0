@@ -16,11 +16,11 @@
 	</ul>
 {#<form action="{% url 'order:payorder' %}" method="post">#}
 <form action="" method="post">
-    {%for cart in carts%}
+    {%for cart in skus%}
 	<ul class="cart_list_td clearfix" id="{{cart.id}}">
         {% csrf_token %}
 		<li class="col01"><input type="checkbox" name="sku_id" value="{{cart.id}}" checked="" class="checkbox"></li>
-		<li class="col02"><img src="{{cart.image}}"></li>
+		<li class="col02"><img src="{{cart.image.url}}"></li>
 		<li class="col03">{{cart.name}}<br><em>{{cart.price}}元/{{cart.unite}}</em></li>
 		<li class="col04">{{cart.unite}}</li>
 		<li class="col05">{{cart.price}}</li>
@@ -31,7 +31,7 @@
 				<a href="javascript:;" class="minus fl" data-id="{{ cart.id }}">-</a>
 			</div>
 		</li>
-		<li class="col07">{{cart.product_total_price}}</li>
+		<li class="col07">{{cart.amount}}</li>
 		<li class="col08"><a id="delete" data-id="{{ cart.id }}" href="">删除</a></li>
 		<!--class="del_good-->
 	</ul>
@@ -41,7 +41,7 @@
 {#		<li class="col01"><input type="checkbox" name="" checked="" id="checkToggle"></li>#}
 		<li class="col01"><input type="checkbox" name="" checked="" id="checkToggle"></li>
 		<li class="col02">全选</li>
-		<li class="col03">合计(不含运费)：<span>¥</span><em id="sumtotal"></em><br>共计<b class="countGood">{{ total_count }}</b>件商品</li>
+		<li class="col03">合计(不含运费)：<span>¥</span><em id="sumtotal">{{ total_amount }}</em><br>共计<b class="countGood">{{ total_count }}</b>件商品</li>
 		<li class="col04"><input class="order" name="" type="submit" value="去结算"/></li>
 	</ul>
 </form>
@@ -50,22 +50,22 @@
     <script>
         //计算总件数以及总价格
         function get_total_price(){
-            total_price = 0
+            total_amount = 0
             total_count = 0
             $('.cart_list_td').find(':checked').parents('ul').each(function () {
                 p_num = $(this).find('.num_show').val()
                 p_price = $(this).find('.col07').text()
                 total_count += parseInt(p_num)
-                total_price += parseFloat(p_price)
+                total_amount += parseFloat(p_price)
             })
-            $('.settlements').find('#sumtotal').text(total_price)
+            $('.settlements').find('#sumtotal').text(total_amount)
             $('.settlements').find('.countGood').text(total_count)
         }
-        //当某个商品选中或者未选中时，更新当前页面的的状态
+        //当某个商品选中或者未选中时，更新全选与全不选的状态
         $('.cart_list_td').find(':checkbox').change(function () {
             all_len = $('.cart_list_td').find(':checkbox').length
             check_len = $('.cart_list_td').find(':checked').length
-            {#is_checkd = true#}
+            is_checkd = true
             if(all_len>check_len){
                 $('.settlements').find(':checkbox').prop('checked', false)
             }
@@ -84,25 +84,27 @@
         });
         //购物车增加
         $('.add').click(function () {
-            sku_id = $(this).attr('data-id')
-            count = $(this).next().val()
+            var sku_id = $(this).attr('data-id')
+            var count = $(this).next().val()
             count = parseInt(count) + 1
-            csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val()
-            params = {sku_id, count, csrfmiddlewaretoken}
-            // 设置ajax请求为同步方式
+            var csrf = $('input[name="csrfmiddlewaretoken"]').val()
+            var params = {'sku_id': sku_id, 'count': count, 'csrfmiddlewaretoken': csrf}
+            var error_response = false
+            // 设置ajax请求为同步方式,默认ajax都是异步的
             $.ajaxSettings.async = false
-            $.post('/cart/updatecart', params, function (data) {
-            if(data.status == 5){
+            $.post('/cart/update', params, function (data) {
+            if(data.res == 4){
                 $('.total_count1').text(data.total_count)
                 error_response = false
-                {#alert('successful')#}
             }
             else{
-                alert(data.msg)
+                error_response = true
+                alert(data.error_msg)
                 return
             }
 
         })
+            // 将ajax设置回来
             $.ajaxSettings.async = true
             if(error_response==false){
                 $(this).next().val(count)
@@ -122,17 +124,17 @@
             if(count<=0){
                 return
             }
-            csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val()
-            params = {sku_id, count, csrfmiddlewaretoken}
+            csrf = $('input[name="csrfmiddlewaretoken"]').val()
+            params = {'sku_id': sku_id, 'count': count, 'csrfmiddlewaretoken': csrf}
             $.ajaxSettings.async = false
-            $.post('/cart/updatecart', params, function (data) {
-            if(data.status == 5){
+            var error_response = false
+            $.post('/cart/update', params, function (data) {
+            if(data.res == 4){
                 $('.total_count1').text(data.total_count)
                 error_response = false
-                {#alert('successful')#}
             }
             else{
-                alert(data.msg)
+                alert(data.error_msg)
             }
 
         })
@@ -147,30 +149,31 @@
                 }
             }
         })
-        //手动输入
+        //输入框数量手动输入
         g_count = 0
+        // 记住用户输入之前的数量
         $('.num_show').focus(function () {
             g_count = $(this).val()
         })
+        // 检查输入的数量是否合法
         $('.num_show').blur(function () {
             sku_id = $(this).attr('data-id')
             count = $(this).val()
-            if(parseInt(count<=0) || isNaN(count)){
-                 //输入值无效
+            if(parseInt(count)<=0 || isNaN(count) || count.trim().length == 0){
+                 //输入值无效,并恢复为原来的值
                 $(this).val(g_count)
                 return
             }
-            csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val()
-            params = {sku_id, count, csrfmiddlewaretoken}
+            csrf = $('input[name="csrfmiddlewaretoken"]').val()
+            params = {'sku_id': sku_id, 'count': count, 'csrfmiddlewaretoken': csrf}
             $.ajaxSettings.async = false
-            $.post('/cart/updatecart', params, function (data) {
-            if(data.status == 5){
+            $.post('/cart/update', params, function (data) {
+            if(data.res == 4){
                 $('.total_count1').text(data.total_count)
                 error_response = false
-                {#alert('successful')#}
             }
             else{
-                alert(data.msg)
+                alert(data.error_msg)
             }
 
         })
@@ -188,20 +191,19 @@
         //删除商品
         $('#delete').click(function () {
             sku_id = $(this).attr('data-id')
-            csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val()
-            params = {sku_id, csrfmiddlewaretoken}
+            csrf = $('input[name="csrfmiddlewaretoken"]').val()
+            params = {'sku_id': sku_id, 'csrfmiddlewaretoken': csrf}
             ul = $(this).parents('.cart_list_td')
             $.post('/cart/delete', params, function (data) {
-                if(data.status==3){
+                if(data.res==2){
                     $('.total_count1').text(data.count)
-                 ul.remove()
-                 if($(this).parents('ul').find(':checked')){
-                     get_total_price()
+                    ul.remove()
+                    if($(this).parents('ul').find(':checked')){
+                        get_total_price()
                  }
-                 {#alert('shanchuchenggong')#}
                 }
                 else{
-                    alert(data.msg)
+                    alert(data.error_msg)
                 }
             })
         })

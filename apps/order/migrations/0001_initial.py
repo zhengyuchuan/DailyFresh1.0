@@ -47,7 +47,7 @@ class Migration(migrations.Migration):
                 ('price', models.DecimalField(decimal_places=2, max_digits=10, verbose_name='商品价格')),
                 ('comment', models.CharField(default='', max_length=128, verbose_name='评论')),
                 ('order_info', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='order.OrderInfo', verbose_name='订单信息')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='goods.ProductSKU', verbose_name='商品SKU')),
+                ('goods', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='goods.ProductSKU', verbose_name='商品SKU')),
             ],
             options={
                 'verbose_name': '商品订单',

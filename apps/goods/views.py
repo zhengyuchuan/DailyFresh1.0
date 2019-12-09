@@ -45,14 +45,25 @@ def goods_list(request, product_category_id, page_number):
             num_page = range(len(num_page)-4, len(num_page)+1)
         else:
             num_page = range(current_page-2, current_page+2)
-
     paginator.number = current_page
+    types = ProductCategory.objects.all()
+    # 新品推荐前2个
     new_product = ProductSKU.objects.filter(type=category_obj).order_by('-create_time')[:2]
+    # 购物车商品数量
+    user = request.user
+    total_count = ''
+    if user.is_authenticated:
+        con = get_redis_connection('default')
+        cart_key = 'cart_%d' % user.id
+        # 计算购物车中条目数
+        total_count = con.hlen(cart_key)
     return render(request, 'list.html', {'page': paginator,
                                          'sort': sort,
                                          'show_nums': num_page,
                                          'new_product': new_product,
                                          'category_obj': category_obj,
+                                         'types': types,
+                                         'count': total_count,
                                          })
 
 
@@ -63,10 +74,15 @@ def detail(request, detail_id):
         detail_id = 1
     product_sku = ProductSKU.objects.get(id=detail_id)
     user = request.user
+    cart_count = 0
     if user.is_authenticated:
         con = get_redis_connection('default')
         history_key = 'history_%d' % user.id
         con.lrem(history_key, 0, product_sku.id)
         con.lpush(history_key, product_sku.id)
         con.ltrim(history_key, 0, 4)
-    return render(request, 'detail.html', {'product': product_sku})
+        cart_key = 'cart_%d' % user.id
+        cart_count = con.hlen(cart_key)
+    return render(request, 'detail.html', {'product': product_sku,
+                                           'count': cart_count})
+

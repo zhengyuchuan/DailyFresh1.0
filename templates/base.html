@@ -15,7 +15,6 @@
             {#        如果你是使用的auth.login()登录的话，你可以在任何一个模板里直接使用user对象#}
             {% if user.is_authenticated %}
                 <div class="user_link fl">
-                    {#                <a href="{% url 'user:userinfo' %}">欢迎您：{{user.username}}</a>#}
                     <a href="">欢迎您：{{ user.username }}</a>
                     <span>|</span>
                     <a href="{% url 'user:logout' %}">退出</a>
@@ -43,7 +42,7 @@
         <div class="sub_page_name fl">{{ title }}</div>
         <form method='get' action="/search/" target="_blank">
             <div class="search_con fl">
-                <form action="/search" method="get">
+                <form action="/search/" method="get">
                     <input type="text" class="input_text fl" name="q" placeholder="搜索商品">
                     <input type="submit" class="input_btn fr" name="" value="搜索">
                 </form>
@@ -59,6 +58,7 @@
 {% block detail %}{% endblock %}
 {% block main %}{% endblock %}
 {% block list %}{% endblock %}
+{% block bottom %}{% endblock %}
 <script src="/static/common_js/jquery1.11.0.js"></script>
 <script src="/static/common_js/jquery-ui.min.js"></script>
 {% block js %}{% endblock %}

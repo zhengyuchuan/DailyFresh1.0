@@ -130,7 +130,7 @@ class Migration(migrations.Migration):
                 ('is_delete', models.BooleanField(default=False, verbose_name='删除标记')),
                 ('display_type', models.SmallIntegerField(choices=[(0, '文字'), (1, '图片')], default=1, verbose_name='展示类型')),
                 ('index', models.SmallIntegerField(default=0, verbose_name='展示顺序')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='goods.ProductSKU', verbose_name='商品SKU')),
+                ('goods', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='goods.ProductSKU', verbose_name='商品SKU')),
                 ('product_type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='goods.ProductCategory', verbose_name='商品种类')),
             ],
             options={
@@ -141,12 +141,12 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='productimage',
-            name='product',
+            name='goods',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='goods.ProductSKU', verbose_name='商品'),
         ),
         migrations.AddField(
             model_name='productbanner',
-            name='product',
+            name='goods',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='goods.ProductSKU', verbose_name='商品'),
         ),
     ]
