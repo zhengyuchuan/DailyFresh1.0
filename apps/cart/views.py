@@ -4,9 +4,11 @@ from django.views.generic import View
 from django.http import JsonResponse
 from goods.models import ProductSKU
 from django_redis import get_redis_connection
+from utils.mixin import LoginRequiredMixin
 
 
-class CartInfo(View):
+class CartInfo(LoginRequiredMixin, View):
+    """显示购物车页面"""
     def get(self, request):
         user = request.user
         con = get_redis_connection('default')
@@ -33,6 +35,7 @@ class CartInfo(View):
 
 
 class CartADDView(View):
+    """商品详情页面，列表页，点击添加至购物车，会提交至这里"""
     def post(self, request):
         user = request.user
         if not user.is_authenticated:
@@ -62,6 +65,7 @@ class CartADDView(View):
 
 
 class CartUpdateView(View):
+    """购物车页面，商品的添加减少与手动输入"""
     def post(self, request):
         user = request.user
         if not user.is_authenticated:
@@ -95,6 +99,7 @@ class CartUpdateView(View):
 
 
 class CartDeleteView(View):
+    """购物车页面，购物车商品的删除"""
     def post(self, request):
         user = request.user
         if not user.is_authenticated:

@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% block main %}
     <h3 class="common_title">确认收货地址</h3>
-
 	<div class="common_list_con clearfix">
 		<dl>
 			<dt>寄送到：</dt>
@@ -9,7 +8,7 @@
 			<dd><input type="radio" id="oaddress" value="{{ add.id }}" name="addr" {% if add.is_default %}checked{% endif %}>{{add.address}} （{{add.recipient}} 收） {{add.contact_num}}</dd>
             {% endfor %}
 		</dl>
-		<a href="{% url 'user:useraddress' %}" class="edit_site">编辑收货地址</a>
+		<a href="{% url 'user:user_address' %}" class="edit_site">编辑收货地址</a>
 
 	</div>
 
@@ -37,15 +36,15 @@
 			<li class="col04">数量</li>
 			<li class="col05">小计</li>
 		</ul>
-		{%for p in total_product %}
+		{%for p in skus %}
 		<ul class="goods_list_td clearfix" id="{{order.id}}">
 			<li class="col01">{{p.id}}</li>
-			<li class="col02"><img src="/static/{{p.image}}"></li>
+			<li class="col02"><img src="{{p.image.url}}"></li>
 			<li class="col03">{{p.name}}</li>
 			<li class="col04">{{p.unite}}</li>
 			<li class="col05">{{p.price}}</li>
-			<li class="col06">{{p.pro_count}}</li>
-			<li class="col07">{{p.pro_amount}}</li>
+			<li class="col06">{{p.count}}</li>
+			<li class="col07">{{p.amount}}元</li>
 		</ul>
 		{%endfor%}
 	</div>
@@ -54,15 +53,15 @@
 
 	<div class="common_list_con clearfix">
 		<div class="settle_con">
-			<div class="total_goods_count">共<em id="gcount">{{ total_count }}</em>件商品，总金额<b id="sumtotal">{{ total_price }}</b></div>
-			<div class="transit">运费：<b>{{ transition }}元</b></div>
-			<div class="total_pay">实付款：<b id="total_pay">{{ total_pricewithtran }}</b></div>
+			<div class="total_goods_count">共<em id="gcount">{{ total_count }}</em>件商品，总金额<b id="sumtotal">{{ total_amount }}元</b></div>
+			<div class="transit">运费：<b>{{ transport_price }}元</b></div>
+			<div class="total_pay">实付款：<b id="total_pay">{{ total_price }}元</b></div>
 		</div>
 	</div>
 
 	<div class="order_submit clearfix">
         {% csrf_token %}
-		<a href="javascript:;" data-skus="{{ skus }}" id="order_btn">提交订单</a>
+		<a href="javascript:;" data-skus="{{ sku_str }}" id="order_btn">提交订单</a>
 	</div>
 
 <div class="popup_con">
@@ -77,30 +76,30 @@
     <script>
         $(function () {
             $('#order_btn').click(function () {
-                add_id = $('input[name="addr"]:checked').val()
-                pay_id = $('input[name="pay_style"]:checked').val()
-                skus = $('#order_btn').attr('data-skus')
-                csrfmiddlewaretoken  = $('input[name="csrfmiddlewaretoken"]').val()
+                var addr_id = $('input[name="addr"]:checked').val()
+                var pay_id = $('input[name="pay_style"]:checked').val()
+                var sku_str = $('#order_btn').attr('data-skus')
+                var csrfmiddlewaretoken  = $('input[name="csrfmiddlewaretoken"]').val()
                 params = {
-                    csrfmiddlewaretoken,
-                    add_id,
-                    pay_id,
-                    skus
+                    'csrfmiddlewaretoken': csrfmiddlewaretoken,
+                    'addr_id': addr_id,
+                    'pay_id': pay_id,
+                    'sku_str': sku_str
                 }
-                $.post('/order/commit/', params, function (data) {
-                    if(data.res==5){
+                $.post('/user/order_commit', params, function (data) {
+                    if(data.res==4){
                         localStorage.setItem('order_finish', 2);
                         $('.popup_con').fadeIn('fast', function () {
                             setTimeout(function () {
                                 $('.popup_con').fadeOut('fast', function () {
-                                    window.location.href = '/user/userorder/1'
+                                    window.location.href = '/user/user_order'
                                 })
                             }, 2000)
                         })
 
                     }
                     else {
-                        alert(data.msg)
+                        alert(data.error_msg)
                     }
                 })
             })

@@ -15,7 +15,7 @@
 		<li class="col06">操作</li>
 	</ul>
 {#<form action="{% url 'order:payorder' %}" method="post">#}
-<form action="" method="post">
+<form action="{% url 'user:order_verify' %}" method="post">
     {%for cart in skus%}
 	<ul class="cart_list_td clearfix" id="{{cart.id}}">
         {% csrf_token %}
@@ -33,12 +33,10 @@
 		</li>
 		<li class="col07">{{cart.amount}}</li>
 		<li class="col08"><a id="delete" data-id="{{ cart.id }}" href="">删除</a></li>
-		<!--class="del_good-->
 	</ul>
 	{%endfor%}
 
 	<ul class="settlements">
-{#		<li class="col01"><input type="checkbox" name="" checked="" id="checkToggle"></li>#}
 		<li class="col01"><input type="checkbox" name="" checked="" id="checkToggle"></li>
 		<li class="col02">全选</li>
 		<li class="col03">合计(不含运费)：<span>¥</span><em id="sumtotal">{{ total_amount }}</em><br>共计<b class="countGood">{{ total_count }}</b>件商品</li>
