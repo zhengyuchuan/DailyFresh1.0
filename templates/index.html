@@ -80,12 +80,12 @@
 		var oFruit = document.getElementById('fruit_more');
 		var oShownum = document.getElementById('show_count');
 
-		var hasorder = localStorage.getItem('order_finish');
-
-		if(hasorder)
-		{
-			oShownum.innerHTML = '2';
-		}
+		{#var hasorder = localStorage.getItem('order_finish');#}
+        {##}
+		{#if(hasorder)#}
+		{#{#}
+		{#	oShownum.innerHTML = '0';#}
+		{#}#}
 
 		oFruit.onclick = function(d){
 			window.location.href = 'list.html';

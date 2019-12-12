@@ -17,25 +17,25 @@
         <tbody>
         <tr>
             <td width="55%">
-                {% for item in orderinfo.ps %}
+                {% for item in orderinfo.order_skus %}
                 <ul class="order_goods_list clearfix">
-                    <li class="col01"><img src="{{ item.image }}"></li>
-                    <li class="col02">{{item.name}}<em><span>{{item.price}}</span>元/{{item.unite}}</em>
+                    <li class="col01"><img src="{{ item.product.image.url }}"></li>
+                    <li class="col02">{{item.product.name}}<em><span>{{item.price}}</span>元/{{item.product.unite}}</em>
                     </li>
                     <li class="col03">{{item.count}}个</li>
-                    <li class="col04">{{ item.total }}</li>
+                    <li class="col04">{{ item.amount }}</li>
                 </ul>
                 {% endfor %}
             </td>
-            <td width="15%">{{ orderinfo.product_price }}元</td>
-            <td width="15%"><a href="javascript:void(0);" data-status="{{ orderinfo.status }}" data-id="{{ orderinfo.order_id }}" class="oper_btn">去支付</a></td>
+            <td width="15%">{{ orderinfo.product_price|add:orderinfo.transit_price }}元(含运费：{{ orderinfo.transit_price }}元)</td>
+            <td width="15%"><a href="javascript:void(0);" data-status="{{ orderinfo.order_status }}" data-id="{{ orderinfo.order_id }}" class="oper_btn">去支付</a></td>
 {#            <td width="15%"><a href="#" class="oper_btn">查看物流</a></td>#}
         </tr>
         </tbody>
     </table>
     {% endfor %}
-    <div class="pagenation">
-        <div class="pagenation">
+    <div class="pagination_css">
+        <div class="pagination_css">
         {% if page.has_previous %}
         <a href="{% url 'user:user_order' page.previous_page_number %}">上一页</a>
         {% endif %}
@@ -57,34 +57,36 @@
 {% block js %}
     <script>
         status = $('.oper_btn').attr('data-status')
-        if(status=='待评价'){
+        if(status=='4'){
             $('.oper_btn').text('待评价')
         }
         $('.oper_btn').click(function () {
-            if(status=='待支付'){
-                csrfmiddlewaretoken = $('input[name="csrfmiddlewaretoken"]').val()
-                order_id = $(this).attr('data-id')
-                params = {csrfmiddlewaretoken, order_id}
-                $.post('/order/orderpay/', params, function (data) {
-                    if(data.res==3){
-                        window.open(data.pay)
-                        $.post('/order/checkorder/', params, function (data) {
-                            if(data.res==3){
+            if(status=='1'){
+                var csrf = $('input[name="csrfmiddlewaretoken"]').val()
+                var order_id = $(this).attr('data-id')
+                var params = {'csrfmiddlewaretoken':csrf, 'order_id':order_id}
+                $.post('/user/order_pay', params, function (data) {
+                    if(data.res==2){
+                        // 重新打开页面
+                        window.open(data.pay_url)
+                        $.post('/user/order_pay_check', params, function (data) {
+                            if(data.res==2){
                                 alert('支付成功')
+                                // 刷新页面
                                 location.reload()
                             }
                             else {
-                                alert(data.msg)
+                                alert(data.error_msg)
                             }
                         })
                     }
                     else {
-                        alert(data.msg)
+                        alert(data.error_msg)
                     }
                 })
             }
             else {
-                alert('yizhifu')
+                alert('未能进入支付宝支付页面')
             }
 
         })

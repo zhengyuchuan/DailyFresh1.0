@@ -5,7 +5,7 @@ from django_redis import get_redis_connection
 
 
 def goods(request):
-    return render(request, 'index.html')
+    return redirect(reverse('user:index'))
 
 
 def goods_list(request, product_category_id, page_number):
@@ -23,7 +23,7 @@ def goods_list(request, product_category_id, page_number):
     else:
         sort = 'default'
         object_list = ProductSKU.objects.filter(type=category_obj).order_by('-id')
-    paginator = Paginator(object_list, 1)
+    paginator = Paginator(object_list, 8)
     try:
         current_page = int(page_number)
     except:
@@ -44,7 +44,7 @@ def goods_list(request, product_category_id, page_number):
         elif current_page >= len(num_page)-3:
             num_page = range(len(num_page)-4, len(num_page)+1)
         else:
-            num_page = range(current_page-2, current_page+2)
+            num_page = range(current_page-2, current_page+3)
     paginator.number = current_page
     types = ProductCategory.objects.all()
     # 新品推荐前2个

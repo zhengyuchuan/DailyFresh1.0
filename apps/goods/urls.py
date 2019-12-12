@@ -19,6 +19,7 @@ from apps.goods import views
 
 urlpatterns = [
     url(r'^index$', views.goods, name='index'),
-    url(r'list/(\d+)/(\d+)', views.goods_list, name='list'),
-    url(r'detail/(\d+)', views.detail, name='detail'),
+    url(r'^list/(\d+)/(\d+)$', views.goods_list, name='list'),
+    url(r'^detail/(\d+)$', views.detail, name='detail'),
+    url(r'^', views.goods)
 ]

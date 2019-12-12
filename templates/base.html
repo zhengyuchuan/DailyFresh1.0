@@ -23,7 +23,7 @@
                     <span>|</span>
                     <a href="{% url 'cart:cart' %}">我的购物车</a>
                     <span>|</span>
-                    <a href="{% url 'user:user_order' %}">我的订单</a>
+                    <a href="{% url 'user:user_order' 1 %}">我的订单</a>
                 </div>
             {% else %}
                 <div class="login_btn fl">

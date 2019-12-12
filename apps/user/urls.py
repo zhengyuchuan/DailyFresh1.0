@@ -25,9 +25,11 @@ urlpatterns = [
     url(r'^logout$', views.logout_view, name='logout'),
     url(r'^user_center$', views.UserCenter.as_view(), name='user_center'),
     url(r'^user_address$', views.Useraddress.as_view(), name='user_address'),
-    url(r'^user_order$', views.UserOrder.as_view(), name='user_order'),
+    url(r'^user_order/(\d)$', views.UserOrder.as_view(), name='user_order'),
     url(r'^order_verify$', views.UserOrderVerify.as_view(), name='order_verify'),
-    url(r'^order_commit$', views.UserOrderCommit.as_view(), name='order_commit')
+    url(r'^order_commit$', views.UserOrderCommit.as_view(), name='order_commit'),
+    url(r'^order_pay$', views.UserOrderPay.as_view(), name='order_pay'),
+    url(r'^order_pay_check$', views.OrderPayCheck.as_view(), name='order_pay_check')
 ]
 
 

@@ -87,12 +87,12 @@
                     'sku_str': sku_str
                 }
                 $.post('/user/order_commit', params, function (data) {
-                    if(data.res==4){
-                        localStorage.setItem('order_finish', 2);
+                    if(data.res==5){
+                        localStorage.setItem('order_finish', 0);
                         $('.popup_con').fadeIn('fast', function () {
                             setTimeout(function () {
                                 $('.popup_con').fadeOut('fast', function () {
-                                    window.location.href = '/user/user_order'
+                                    window.location.href = '/user/user_order/1'
                                 })
                             }, 2000)
                         })
