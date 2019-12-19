@@ -60,6 +60,9 @@
         if(status=='4'){
             $('.oper_btn').text('待评价')
         }
+        if(status=='5'){
+            $('.oper_btn').text('已完成')
+        }
         $('.oper_btn').click(function () {
             if(status=='1'){
                 var csrf = $('input[name="csrfmiddlewaretoken"]').val()

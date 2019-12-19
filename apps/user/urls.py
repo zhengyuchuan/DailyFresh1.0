@@ -29,7 +29,8 @@ urlpatterns = [
     url(r'^order_verify$', views.UserOrderVerify.as_view(), name='order_verify'),
     url(r'^order_commit$', views.UserOrderCommit.as_view(), name='order_commit'),
     url(r'^order_pay$', views.UserOrderPay.as_view(), name='order_pay'),
-    url(r'^order_pay_check$', views.OrderPayCheck.as_view(), name='order_pay_check')
+    url(r'^order_pay_check$', views.OrderPayCheck.as_view(), name='order_pay_check'),
+    url(r'^order_direct_purchase$', views.UserDirectPurchase.as_view(), name='order_direct_purchase')
 ]
 
 

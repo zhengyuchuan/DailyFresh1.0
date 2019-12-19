@@ -268,7 +268,7 @@ class UserOrderVerify(LoginRequiredMixin, View):
 
 class UserOrderCommit(View):
     """订单创建发起ajax请求"""
-    @transaction.atomic
+    @transaction.atomic  # 保证后续对数据库的操作都在一个事务中
     def post(self, request):
         user = request.user
         if not user.is_authenticated:
@@ -473,29 +473,24 @@ class OrderPayCheck(View):
                 return JsonResponse({'res': 3, 'error_msg': '支付失败'})
 
 
-
 class UserDirectPurchase(LoginRequiredMixin, View):
     def post(self, request):
-        sku_ids = request.POST.getlist('sku_id')
+        sku_id = request.POST.get('sku_id')
         user = request.user
         con = get_redis_connection('default')
         cart_key = 'cart_%d' % user.id
-        skus = []
-        total_count = 0
-        total_amount = 0
-        for sku_id in sku_ids:
-            sku = ProductSKU.objects.get(id=sku_id)
-            count = con.hget(cart_key, sku_id)
-            amount = sku.price*int(count)
-            sku.count = count
-            sku.amount = amount
-            skus.append(sku)
-            total_count += int(count)
-            total_amount += amount
+        sku = ProductSKU.objects.get(id=sku_id)
+        skus = [sku, ]
+        count = int(request.POST.get('sku_count'))
+        amount = sku.price*count
+        sku.count = count
+        sku.amount = amount
+        total_count = count
+        total_amount = amount
         transport_price = 10
         total_price = total_amount + transport_price
         addrs = UserAddress.objects.filter(user=user)
-        sku_str = ",".join(sku_ids)
+        sku_str = ",".join(sku_id)
         cart_count = con.hlen(cart_key)
         return render(request, 'order.html', {'skus': skus,
                                               'total_count': total_count,

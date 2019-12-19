@@ -5,7 +5,6 @@
 {% block detail %}
     <div class="goods_detail_con clearfix">
         <div class="goods_detail_pic fl"><img src="{{ product.image.url }}"></div>
-
         <div class="goods_detail_list fr" data-id="{{ product.id }}">
             <h3>{{ product.name }}</h3>
             <p>{{ product.desc }}</p>
@@ -17,7 +16,7 @@
                 <div class="goods_num clearfix">
                     <div class="num_name fl">数 量：</div>
                     <div class="num_add fl">
-                        <input type="text" class="num_show fl" value="1" id="num_show">
+                        <input type="text" class="num_show fl" value="1" id="num_show" name="sku_count">
                         <a href="javascript:;" class="add fr" id="add">+</a>
                         <a href="javascript:;" class="minus fr" id="minus">-</a>
                     </div>
@@ -38,9 +37,13 @@
                 </div>
                 <div class="total">总价：<em id="gtotal"></em></div>
                 <div class="operate_btn">
-                    {% csrf_token %}
                     {% if request.user %}
-                        <a href="javascript:;" class="buy_btn" id="buy">立即购买</a>
+                        <form action="{% url 'user:order_direct_purchase' %}" method="post" class="buy_btn">
+                            <input type="hidden" name="sku_id" value="{{ product.id }}">
+                            <input type="hidden" name="sku_count" value="1">
+                            <input type="submit" class="buy_btn" value="立即购买" id="buy">
+    {#                        <a href="javascript:;" class="buy_btn" id="buy">立即购买</a>#}
+                        </form>
                     {% else %}
                         <a href="{% url 'user:login' %}" class="buy_btn" id="buy">立即购买</a>
                     {% endif %}
@@ -98,12 +101,16 @@
             var inventory = parseInt($('#kucun').text())
             if(count>=inventory){
                     $('#num_show').val(count)
+                    // 更新form表单里sku_count的值
+                    $('input[name="sku_count"]').val(count)
                     update_goods_amount()
                     return;
             }
             count = parseInt(count)+1
             // 重新设置商品的数目
             $('.num_show').val(count)
+            // 更新form表单里sku_count的值
+            $('input[name="sku_count"]').val(count)
             // 更新商品的总价
             update_goods_amount()
         })
@@ -112,14 +119,19 @@
             // 获取商品原有的数目
             var count = $('.num_show').val()
             // 减1
-            if (count <= 0){
+            if (count <= 1){
                 count = 1
                 $('.num_show').val(count)
+                // 更新form表单里sku_count的值
+                $('input[name="sku_count"]').val(count)
                 update_goods_amount()
+                return
             }
             count = parseInt(count)-1
             // 重新设置商品的数目
             $('.num_show').val(count)
+            // 更新form表单里sku_count的值
+            $('input[name="sku_count"]').val(count)
             // 更新商品的总价
             update_goods_amount()
         })
@@ -131,9 +143,13 @@
             // 校验count是否合法
             if (isNaN(count) || count.trim().length==0 || parseInt(count) <=0 || parseInt(count) >= inventory){
                 count = 1
+                // 更新form表单里sku_count的值
+                $('input[name="sku_count"]').val(count)
             }
             // 重新设置商品的数目
             $(this).val(parseInt(count))
+            // 更新form表单里sku_count的值
+            $('input[name="sku_count"]').val(count)
             // 更新商品的总价
             update_goods_amount()
         })
@@ -171,13 +187,6 @@
                 }
             })
 		})
-        {#$('.buy_btn').click(function () {#}
-        {#    var product_id = $('.goods_detail_list').attr('data-id')#}
-        {#    var product_count = $('.num_show').val()#}
-        {#    params = {'product_id': product_id, 'product_count': product_count}#}
-        {#    $.ajax('')#}
-        {##}
-        {#})#}
     </script>
 
 {% endblock %}
