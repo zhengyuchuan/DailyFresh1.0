@@ -1,5 +1,5 @@
 from django.shortcuts import render, HttpResponse, redirect, reverse
-from django.views.generic import View
+from django.views.generic.base import View
 from user.models import User, UserAddress
 from goods.models import ProductCategory,ProductBanner,PromotionPc, TypeShow, ProductSKU
 from order.models import OrderInfo, OrderProduct
@@ -16,6 +16,7 @@ from django.db import transaction
 from django.core.paginator import Paginator
 from alipay import AliPay
 import ssl
+
 
 
 # 全局取消证书验证

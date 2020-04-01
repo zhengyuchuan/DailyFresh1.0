@@ -26,7 +26,7 @@ class UserAddress(BaseModel):
     address = models.CharField(max_length=100, verbose_name='收件人地址')
     zip_code = models.IntegerField(null=True, verbose_name='邮政编码')
     is_default = models.BooleanField(default=False, verbose_name='是否默认')
-    user = models.ForeignKey(User, verbose_name='所属账户')
+    user = models.ForeignKey(User, verbose_name='所属账户',on_delete=models.CASCADE)
     # 使用自定义的管理器对象
     objects = AddressManager()
 

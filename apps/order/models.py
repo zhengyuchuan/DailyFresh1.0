@@ -3,6 +3,7 @@ from db.base_model import BaseModel
 
 
 class OrderInfo(BaseModel):
+    # 每个元组中的第一个元素是要在模型上设置的实际值，第二个元素是人类可读的名称
     PAY_METHOD = (
         (1, '货到付款'),
         (2, '微信支付'),
@@ -36,8 +37,8 @@ class OrderInfo(BaseModel):
     product_count = models.IntegerField(verbose_name='产品数量')
     product_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='总价格')
     transit_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='运费')
-    user = models.ForeignKey('user.User', verbose_name='用户')
-    addr = models.ForeignKey('user.UserAddress', verbose_name='地址')
+    user = models.ForeignKey('user.User', verbose_name='用户',on_delete=models.CASCADE)
+    addr = models.ForeignKey('user.UserAddress', verbose_name='地址',on_delete=models.CASCADE)
     trance_num = models.CharField(max_length=100, default='', verbose_name='支付编号')
 
     class Meta:
@@ -49,8 +50,8 @@ class OrderInfo(BaseModel):
 class OrderProduct(BaseModel):
     count = models.SmallIntegerField(default=1, verbose_name='商品数目')
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='商品价格')
-    product = models.ForeignKey('goods.ProductSKU', verbose_name='商品SKU')
-    order_info = models.ForeignKey(OrderInfo, verbose_name='订单信息')
+    product = models.ForeignKey('goods.ProductSKU', verbose_name='商品SKU',on_delete=models.CASCADE)
+    order_info = models.ForeignKey(OrderInfo, verbose_name='订单信息',on_delete=models.CASCADE)
     comment = models.CharField(max_length=128, default='', verbose_name='评论')
 
     class Meta:

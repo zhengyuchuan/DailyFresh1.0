@@ -5,13 +5,19 @@ from tinymce.models import HTMLField
 
 class ProductCategory(BaseModel):
     """商品分类表"""
+    # null:当该字段为空时，Django 会将数据库中该字段设置为 NULL
+    # blank:表单验证将允许设置为空值
+    # up_load:上传文件至哪里，该值都将传递给Storage.save()方法。使用默认值 FileSystemStorage，则将字符串值附加到MEDIA_ROOT路径中，以形成本地文件系统上将存储上传文件的位置
     category_name = models.CharField(max_length=20, verbose_name='分类名称', null=True, blank=True)
     logo = models.CharField(max_length=10, verbose_name='标识', null=True, blank=True)
     image = models.ImageField(upload_to='category', verbose_name='商品类型图片', null=True, blank=True)
 
     class Meta:
+        # 数据库中的表名
         db_table = 'product_category'
+        # 后台管理界面，显示的内容
         verbose_name = '商品分类'
+        # 复数情况喜爱，要显示的内容。默认是 +"s"
         verbose_name_plural = verbose_name
 
     def __str__(self):
@@ -46,8 +52,8 @@ class ProductSKU(BaseModel):
     inventory = models.IntegerField(default=1, verbose_name='库存')
     sales = models.IntegerField(default=0, verbose_name='销量')
     status = models.SmallIntegerField(default=1, choices=PRODUCT_STATUS, verbose_name='商品状态')
-    type = models.ForeignKey(ProductCategory, verbose_name='所属分类')
-    products = models.ForeignKey(Products, verbose_name='商品SPU')
+    type = models.ForeignKey(ProductCategory, verbose_name='所属分类',on_delete=models.CASCADE)
+    products = models.ForeignKey(Products, verbose_name='商品SPU',on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'product_sku'
@@ -61,7 +67,7 @@ class ProductSKU(BaseModel):
 class ProductImage(BaseModel):
     """商品SKU图片表"""
     image = models.ImageField(upload_to='products', verbose_name='商品图片路径')
-    product = models.ForeignKey(ProductSKU, verbose_name='商品')
+    product = models.ForeignKey(ProductSKU, verbose_name='商品',on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'product_image'
@@ -73,7 +79,7 @@ class ProductBanner(BaseModel):
     """轮播图片"""
     image = models.ImageField(upload_to='banner', verbose_name='轮播图片')
     index = models.SmallIntegerField(default=0, verbose_name='轮播索引')
-    product = models.ForeignKey(ProductSKU, verbose_name='商品', null=True, blank=True)
+    product = models.ForeignKey(ProductSKU, verbose_name='商品', null=True, blank=True, on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'product_banner'
@@ -108,8 +114,8 @@ class TypeShow(BaseModel):
     )
     display_type = models.SmallIntegerField(choices=DISPLAY_TYPE_CHOICES, default=1, verbose_name='展示类型')
     index = models.SmallIntegerField(default=0, verbose_name='展示顺序')
-    product = models.ForeignKey(ProductSKU, verbose_name='商品SKU')
-    product_type = models.ForeignKey(ProductCategory, verbose_name='商品种类')
+    product = models.ForeignKey(ProductSKU, verbose_name='商品SKU', on_delete=models.CASCADE)
+    product_type = models.ForeignKey(ProductCategory, verbose_name='商品种类',on_delete=models.CASCADE)
 
     class Meta:
         db_table = 'product_show'

@@ -11,6 +11,7 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
+# 通知wsgi服务器setting文件的位置
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "DailyFresh.settings")
 
 application = get_wsgi_application()

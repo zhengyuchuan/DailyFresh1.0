@@ -13,16 +13,20 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url, include
+# django1.11：from django.conf.urls import url, include
+from django.urls import include, path
 from django.contrib import admin
 
-
+# www.fresh.com/goods/?id=123,匹配时不匹配GET请求参数
+# 命名空间namespace可以实现不同app使用相同url，命名空间提供了区分这些URL的方法
+# 使用时 user：index
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^tinymce/', include('tinymce.urls')),
-    url(r'^user/', include('user.urls', namespace='user')),
-    url(r'^cart/', include('cart.urls', namespace='cart')),
-    url(r'^search/', include('haystack.urls')),
-    url(r'^', include('goods.urls', namespace='goods')),
+    path('admin/', admin.site.urls),
+    path('tinymce/', include('tinymce.urls')),
+    path('user/', include(('user.urls','user'), namespace='user')),
+    path('cart/', include(('cart.urls', 'cart'),namespace='cart')),
+    # 使用haystack搜索框架
+    path('search/', include('haystack.urls')),
+    path('', include(('goods.urls', 'goods'), namespace='goods')),
 ]
 
