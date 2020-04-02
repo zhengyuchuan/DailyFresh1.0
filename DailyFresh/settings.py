@@ -96,14 +96,15 @@ WSGI_APPLICATION = 'DailyFresh.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+# 数据库配置
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'dailyfresh',
         'HOST': '127.0.0.1',
         'PORT': 3306,
-        'USER': 'root',
-        'PASSWORD': 'chuan123AA'
+        'USER': 'mysql用户名',
+        'PASSWORD': 'mysql密码'
     }
 }
 
@@ -163,7 +164,7 @@ TINYMCE_DEFAULT_CONFIG = {
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://192.168.1.4:6379/9',
+        'LOCATION': 'redis://ip地址:6379/9',
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },
@@ -174,8 +175,8 @@ CACHES = {
 # 邮件服务器配置
 EMAIL_HOST = 'smtp.163.com'  # 如果是 qq 改成 smtp.qq.com
 EMAIL_PORT = 465
-EMAIL_HOST_USER = '15698208195@163.com'  # 在这里填入您的163邮箱账号
-EMAIL_HOST_PASSWORD = 'chuan123QQ'  # 请在这里填上您自己邮箱的授权码
+EMAIL_HOST_USER = ''  # 在这里填入您的163邮箱账号
+EMAIL_HOST_PASSWORD = ''  # 请在这里填上您自己邮箱的授权码
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 EMAIL_USE_SSL = True
 # 收件人看到的发件人，尖括号中的必须与上面的user一致
@@ -206,7 +207,7 @@ HAYSTACK_CONNECTIONS = {
         # 使用whoosh引擎
         # 'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
         # 使用jieba分词
-        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'ENGINE': 'haystack.backends.whoosh_cn_backend.WhooshEngine',
         # 索引文件路径
         'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
     },

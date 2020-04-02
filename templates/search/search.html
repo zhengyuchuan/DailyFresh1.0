@@ -7,6 +7,7 @@
         <a href="{% url 'user:index' %}" class="logo fl"><img src="/static/images/logo.png"></a>
         <form method='get' action="/search/" target="_blank">
             <div class="search_con fl">
+<!--                搜索的关键字，query-->
                 <input type="text" class="input_text fl" name="q" value="{{ query }}">
                 <input type="submit" class="input_btn fr" name="" value="搜索">
             </div>
@@ -50,6 +51,7 @@
     <div class="main_wrap clearfix">
         <div class="r_wrap fr clearfix">
             <ul class="goods_type_list clearfix">
+<!--                p是SearchResult对象，其.object才是商品对象-->
                 {% for p in page %}
                     <li>
                         <a href="{% url 'goods:detail' p.object.id %}"><img src="{{ p.object.image.url }}"></a>
