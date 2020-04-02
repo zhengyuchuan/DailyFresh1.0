@@ -16,16 +16,16 @@
 
 #### 2.第三方SDK支持
 
-> - 支付宝沙箱：这里使用的是支付宝的沙箱环境，仅用于测试。使用之前，需要先使用**openSSL**工具生成密钥对，将自己生成的公钥填入支付宝沙箱中的应用公钥。然后将生成的私钥和支付宝的公钥，放到[app_private_key](https://github.com/zhengyuchuan/iHome1.0/blob/master/ihome/api_1/Alipay_keys/app_private_key.pem)与[alipay_public_key](https://github.com/zhengyuchuan/iHome1.0/blob/master/ihome/api_1/Alipay_keys/alipay_public_key.pem)两个文件中。
+> - 支付宝沙箱：这里使用的是支付宝的沙箱环境，仅用于测试。使用之前，需要先使用**openSSL**工具生成密钥对，将自己生成的公钥填入支付宝沙箱中的应用公钥。然后将生成的私钥和支付宝的公钥，放到[app_private_key](https://github.com/zhengyuchuan/DailyFresh1.0/blob/master/apps/user/app_private_key.pem)与[alipay_public_key](https://github.com/zhengyuchuan/DailyFresh1.0/blob/master/apps/user/Alipay_public_key.pem)两个文件中。
 
 &nbsp;
 
 #### 3.服务支持
 
 > - openSSL：生成RSA密钥对，用于支付宝沙箱环境
-> - FastDFS：用于存储商品图片。安装说明请看：[nginx+fastdfs安装]()
+> - FastDFS：用于存储商品图片。安装说明请看：[nginx+fastdfs安装](https://github.com/zhengyuchuan/DailyFresh1.0/blob/master/Nginx%2BFastDFS%E5%AE%89%E8%A3%85.md)
 > - Nginx：结合FastDFS，可实现http访问图片功能。后续还可以实现动静分离及负载均衡。
-> - jieba：中文分词技术，用于替换whoosh搜索引擎自带分词器。替换过程请看：[使用jieba分词]()
+> - jieba：中文分词技术，用于替换whoosh搜索引擎自带分词器。替换过程请看：[使用jieba分词](https://github.com/zhengyuchuan/DailyFresh1.0/blob/master/%E4%BD%BF%E7%94%A8jieba%E5%88%86%E8%AF%8D.md)
 > - MySQL：提供数据库支持。
 > - Redis：提供缓存支持。
 
